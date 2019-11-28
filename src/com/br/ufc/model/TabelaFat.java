@@ -11,15 +11,15 @@ public class TabelaFat {
 	private int totalBlocos;
 	private int blocosOcupados;
 	private int memoriaOcupada;
-	private int [] tbFat;
+	private int [] tabelaFat;
 	private Integer politicaAlocacao;
 	private List<Arquivo> listaArquivos; 
 	
 	public int[] inicializarFat(int tamanhoDisco, Integer politicaAlocacao) {
 		if(tamanhoDisco > 0) {
-			tbFat = new int[tamanhoDisco];
+			tabelaFat = new int[tamanhoDisco];
 		}
-		return tbFat;
+		return tabelaFat;
 	}
 	
 	public void adicionaArquivo (Arquivo arquivo, Integer politica) {
@@ -48,13 +48,20 @@ public class TabelaFat {
 		System.out.println("Memoria Livre (Blocos): " + (tamanhoDisco - memoriaOcupada));
 		System.out.println();
 		
-		System.out.println("Mapeamento de Blocos FAT");
-		System.out.println("End. " + " " + "Encadeamento");
 
-		for (int i = 0; i < tbFat.length; i++) {
-			System.out.println(i + "         " + tbFat[i]);
+		for (int i = 0; i < tabelaFat.length; i++) {
+			System.out.println(i + "         " + tabelaFat[i]);
 		}
 		System.out.println();
 	}
 
+	public Boolean verificaCapacidade() {
+		Boolean blocosLivres;
+		if(tabelaFat.length > 0 || tabelaFat.length <= tamanhoDisco) {
+			blocosLivres = true;
+		} else {
+			blocosLivres = false;
+		}
+		return blocosLivres;
+	}
 }

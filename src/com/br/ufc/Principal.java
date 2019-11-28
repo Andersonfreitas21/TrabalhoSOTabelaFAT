@@ -10,13 +10,14 @@ public class Principal {
 	private static Scanner scanner;
 
 	public static void main(String[] args) {
-		TabelaFat fat = new TabelaFat();
+		TabelaFat tabelaFat = new TabelaFat();
 
 		scanner = new Scanner(System.in);
 		int opt;
 		boolean fatInvalido = false;
 		Integer politicaAlocacao = null;
 		int tamDisco = 0;
+		String nomeArq = null;
 
 		do {
 			System.out.println("Digite o tamanho do disco. [Em Blocos] : ");
@@ -44,26 +45,26 @@ public class Principal {
 							break;
 						}
 
-						if (fat.inicializarFat(tamDisco, politicaAlocacao) == null) {
+						if (tabelaFat.inicializarFat(tamDisco, politicaAlocacao) == null) {
 							fatInvalido = false;
 						} else {
 							fatInvalido = true;
 						}
 
 					} catch (Exception e) {
-						System.out.println("Formato Inválido! Erro : ");
-						e.printStackTrace();
+						System.out.println("Formato Inválido! Erro : " + e.getMessage());
 					}
 				}
 
 			} catch (Exception e) {
-				System.out.println("Formato Inválido! Erro de leitura, informe a entrada tipo Inteiro.");
+				System.out
+						.println("Formato Inválido! Erro de leitura, informe a entrada tipo Inteiro." + e.getMessage());
 				fatInvalido = true;
 			}
 
 		} while (!fatInvalido);
 
-		if (!fatInvalido) {
+		if (fatInvalido) {
 			System.out.println("Escolha uma das opções abaixo:\n");
 			System.out.println();
 
@@ -75,24 +76,32 @@ public class Principal {
 
 				switch (opt) {
 				case 1:
-					//Adicionando um arquivo
-					System.out.println("Digite o nome do Arquivo: ");
-					String nomeArq = scanner.nextLine();
-					
-					System.out.println("Digite o tamanho do arquivo. [Em Blocos] : ");
-					int tamArq = scanner.nextInt();
-					
-					Arquivo arquivo = new Arquivo(nomeArq,tamArq);
+					// Verificar se a tabela FAT não está em sua capacidade máxima
+					if (tabelaFat.verificaCapacidade()) {
+						// Adicionando um arquivo
+						System.out.println("Digite o nome do Arquivo: ");
+						nomeArq = scanner.next();
+
+						System.out.println("Digite o tamanho do arquivo. [Em Blocos] : ");
+						int tamArq = scanner.nextInt();
+
+						Arquivo arquivo = new Arquivo(nomeArq, tamArq);
+					} else {
+						System.out.println("Tabela FAT está em sua capacidade de armazenamento esgotada.");
+						tabelaFat.imprimeFat();
+					}
 
 					break;
 
 				case 2:
-					//Excluindo um arquivo
-					
+					// Excluindo um arquivo
+					tabelaFat.imprimeFat();
+					System.out.println("Qual arquivo deseja excluir ? : ");
+
 					break;
 
 				case 3:
-					fat.imprimeFat();
+					tabelaFat.imprimeFat();
 					break;
 
 				case 0:
