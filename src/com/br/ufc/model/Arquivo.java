@@ -1,14 +1,7 @@
 package com.br.ufc.model;
 
-import java.io.Serializable;
+public class Arquivo {
 
-import lombok.Data;
-
-@Data
-public class Arquivo implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
 	private String nomeArquivo;
 	private int blocoInicial;
 	private int tamanhoArquivoEmBlocos;
@@ -18,6 +11,20 @@ public class Arquivo implements Serializable{
 		this.tamanhoArquivoEmBlocos = tamArq;
 	}
 	
-	
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
+
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
+
+	public int getTamanhoArquivoEmBlocos() {
+		return tamanhoArquivoEmBlocos;
+	}
+
+	public void setTamanhoArquivoEmBlocos(int tamanhoArquivoEmBlocos) {
+		this.tamanhoArquivoEmBlocos = tamanhoArquivoEmBlocos;
+	}
 
 }

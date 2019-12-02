@@ -5,27 +5,30 @@ import java.util.Scanner;
 import com.br.ufc.model.Arquivo;
 import com.br.ufc.model.TabelaFat;
 
+import lombok.Data;
+
+@Data	
 public class Principal {
 
 	private static Scanner scanner;
+	private static int tamanhoDisco = 0;
+	private static Integer politicaAlocacao = null;
+	private static int opt = 0;
+	private static boolean fatInvalido = false;
+	private static String nomeArq = null;
 
 	public static void main(String[] args) {
+		
 		TabelaFat tabelaFat = new TabelaFat();
-
 		scanner = new Scanner(System.in);
-		int opt;
-		boolean fatInvalido = false;
-		Integer politicaAlocacao = null;
-		int tamDisco = 0;
-		String nomeArq = null;
-
+		
 		do {
-			System.out.println("Digite o tamanho do disco. [Em Blocos] : ");
+			System.out.print("Digite o tamanho do disco. [Em Blocos] :  ");
 
 			try {
-				tamDisco = scanner.nextInt();
+				tamanhoDisco = scanner.nextInt();
 
-				if (tamDisco > 0) {
+				if (tamanhoDisco > 0) {
 					System.out.print("Digite a política de alocação." + "\n" + "Best fit  - [1]\n" + "First fit - [2]\n"
 							+ "Worst fit - [3]\n" + "Sair      - [0]\n");
 					try {
@@ -45,7 +48,7 @@ public class Principal {
 							break;
 						}
 
-						if (tabelaFat.inicializarFat(tamDisco, politicaAlocacao) == null) {
+						if (tabelaFat.inicializaMemoria(tamanhoDisco) == null) {
 							fatInvalido = false;
 						} else {
 							fatInvalido = true;
@@ -57,14 +60,15 @@ public class Principal {
 				}
 
 			} catch (Exception e) {
-				System.out
-						.println("Formato Inválido! Erro de leitura, informe a entrada tipo Inteiro." + e.getMessage());
 				fatInvalido = true;
+				opt = 1;
+				System.out.println(
+						"Formato Inválido! Erro de leitura, informe a entrada tipo int. " + "" + e.getMessage());
 			}
 
 		} while (!fatInvalido);
 
-		if (fatInvalido) {
+		if (fatInvalido && opt == 0) {
 			System.out.println("Escolha uma das opções abaixo:\n");
 			System.out.println();
 
@@ -76,18 +80,20 @@ public class Principal {
 
 				switch (opt) {
 				case 1:
-					// Verificar se a tabela FAT não está em sua capacidade máxima
+					// Verificar se o disco tem espaço para alocar um arquivo
 					if (tabelaFat.verificaCapacidade()) {
 						// Adicionando um arquivo
 						System.out.println("Digite o nome do Arquivo: ");
 						nomeArq = scanner.next();
 
 						System.out.println("Digite o tamanho do arquivo. [Em Blocos] : ");
-						int tamArq = scanner.nextInt();
+						int tamanhoDoArquivoEmBlocos = scanner.nextInt();
 
-						Arquivo arquivo = new Arquivo(nomeArq, tamArq);
+						Arquivo arquivo = new Arquivo(nomeArq, tamanhoDoArquivoEmBlocos);
+						tabelaFat.adicionaArquivo(arquivo, politicaAlocacao);
+						
 					} else {
-						System.out.println("Tabela FAT está em sua capacidade de armazenamento esgotada.");
+						System.out.println("Memória cheia.");
 						tabelaFat.imprimeFat();
 					}
 
